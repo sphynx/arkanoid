@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6013130c93445babb9a9e5364f6782, type: 3}
+  m_Name: BonusSpawner
+  m_EditorClassIdentifier: 
+  Bonuses:
+  - type: 1
+    probability: 40
+    prefab: {fileID: 5322451694261338041, guid: c68b4bf700dfb4b92aaba44834032fdb, type: 3}
+  - type: 2
+    probability: 40
+    prefab: {fileID: 5488163519822681217, guid: dd1f1df32855d482cb5f26a61ce665cf, type: 3}

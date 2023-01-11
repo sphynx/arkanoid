@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 08-Breakout-Tiles
+  m_Name: GreenTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 7f9fb750395d949fbb43c74e33df14ad, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8404cd02f96c5478e80f556f000e6375, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
