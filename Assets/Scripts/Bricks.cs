@@ -34,13 +34,17 @@ public class Bricks : MonoBehaviour
 
                 // Either remove the brick completely or replace it with the broken tile:
                 TileBase tile = tilemap.GetTile(cell);
-                TileBase nextTile = bricksMapping.Break(tile); // can be null
-                tilemap.SetTile(cell, nextTile);
 
-                if (nextTile == null)
+                if (tile != null)
                 {
-                    Vector3 bonusPos = tilemap.GetCellCenterWorld(cell);
-                    bonusSpawner.SpawnBonus(bonusPos);
+                    TileBase nextTile = bricksMapping.Break(tile); // can be null
+                    tilemap.SetTile(cell, nextTile);
+
+                    if (nextTile == null)
+                    {
+                        Vector3 bonusPos = tilemap.GetCellCenterWorld(cell);
+                        bonusSpawner.SpawnBonus(bonusPos);
+                    }
                 }
             }
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum BonusType
 {
-    WIDE_BAT = 1,
+    WIDE_PAD = 1,
     MULTIPLE_BALLS = 2,
     EXTRA_LIFE = 3,
     GUN = 4,
@@ -39,6 +39,13 @@ public class BonusSpawner : ScriptableObject
     public GameObject SpawnBonus(Vector3 where)
     {
         Bonus bonus = GenerateRandomBonus();
-        return Instantiate(bonus.prefab, where, Quaternion.identity);
+        GameObject result = null;
+
+        if (bonus != null)
+        {
+            result = Instantiate(bonus.prefab, where, Quaternion.identity);
+        }
+
+        return result;
     }
 }

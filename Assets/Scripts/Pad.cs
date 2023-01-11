@@ -12,7 +12,7 @@ public class Pad : MonoBehaviour
 
     void Start()
     {
-        velocity = 0f;       
+        velocity = 0f;
     }
 
     void FixedUpdate()
@@ -40,12 +40,25 @@ public class Pad : MonoBehaviour
             userInput = 0;
         velocity = userInput * maxSpeed; // 30 seems to work fine
 
-        var displacement = velocity * Time.deltaTime;
+        var displacement = velocity * Time.fixedDeltaTime;
         var pos = transform.localPosition;
         var newX = pos.x + displacement;
         newX = Mathf.Clamp(newX, -15.5f, 15.5f);
         var newPos = new Vector3(newX, pos.y, 0);
 
         transform.localPosition = newPos;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log($"Collided with an object tagged <color=red>{collision.gameObject.tag}</color>");
+
+        if (collision.gameObject.CompareTag("WidePadBonus"))
+        {
+            var scale = transform.localScale;
+            transform.localScale = new Vector3(1.5f * scale.x, scale.y, scale.z);
+        }
+
+        Destroy(collision.gameObject);
     }
 }
