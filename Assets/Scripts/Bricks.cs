@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
 public class Bricks : MonoBehaviour
 {
     Tilemap tilemap;
@@ -11,6 +10,13 @@ public class Bricks : MonoBehaviour
 
     [SerializeField]
     BonusSpawner bonusSpawner;
+
+    public Vector3 location;
+
+    private void Update()
+    {
+        location = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
 
     private void Awake()
     {
