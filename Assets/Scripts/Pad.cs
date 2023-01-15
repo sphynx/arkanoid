@@ -37,18 +37,35 @@ public class Pad : MonoBehaviour
     [SerializeField]
     Sprite padWithLaserSprite;
 
+    [SerializeField]
+    int numOfMultiBalls;
+
+    [SerializeField]
+    float multiballsSpawnRadius;
+
     SpriteRenderer spriteRenderer;
 
     float velocity;
+
     bool glueBall;
     bool useLaser;
+    bool useWidePad;
+    float laserActiveTime;
+    float widePadActiveTime;
+
     List<Ball> ballsOnPad;
 
     void Start()
     {
         velocity = 0f;
+
+        // Bonuses:
         glueBall = true;
         useLaser = false;
+        useWidePad = false;
+        laserActiveTime = 0f;
+        widePadActiveTime = 0f;
+
         ballsOnPad = new List<Ball>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -85,7 +102,7 @@ public class Pad : MonoBehaviour
         var pos = transform.localPosition;
         var newX = pos.x + displacement;
 
-        // TODO: set this based on resolution.
+        // TODO: set this based on resolution and current width of pad.
         newX = Mathf.Clamp(newX, -15.5f, 15.5f);
 
         var newPos = new Vector3(newX, pos.y, 0);
@@ -97,8 +114,7 @@ public class Pad : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("MultiballBonus"))
         {
-            // TODO: make this configurable
-            SpawnMultiBalls(3, 3f);
+            SpawnMultiBalls(numOfMultiBalls, multiballsSpawnRadius);
         }
         else if (collision.gameObject.CompareTag("WidePadBonus"))
         {
@@ -174,30 +190,28 @@ public class Pad : MonoBehaviour
 
     void WidenPad()
     {
+        useWidePad = true;
         spriteRenderer.size = new Vector2(6f, 1f);
-        StartCoroutine(nameof(ResetWidePad));
+        widePadActiveTime = Time.time + widePadTime;
     }
 
     void UseLaser()
     {
         useLaser = true;
         spriteRenderer.sprite = padWithLaserSprite;
-        StartCoroutine(nameof(PowerDownLaser));
+        laserActiveTime = Time.time + laserTime;
     }
 
-    IEnumerator ResetWidePad()
+    void PowerDownWidePad()
     {
-        yield return new WaitForSeconds(widePadTime);
-
+        useWidePad = false;
         Bounds bounds = spriteRenderer.sprite.bounds;
         var defaultWidth = bounds.extents.x / bounds.extents.y;
         spriteRenderer.size = new Vector2(defaultWidth, 1f);
     }
 
-    IEnumerator PowerDownLaser()
+    void PowerDownLaser()
     {
-        yield return new WaitForSeconds(laserTime);
-
         useLaser = false;
         spriteRenderer.sprite = normalPadSprite;
     }
@@ -245,14 +259,22 @@ public class Pad : MonoBehaviour
             FireBallsInRandomDirections();
 
             if (useLaser)
-            {
                 FireLaser();
-            }
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
             if (ballsOnPad.Count == 0)
                 SpawnBallOnPad();
+        }
+
+        if (useLaser && Time.time > laserActiveTime)
+        {
+            PowerDownLaser();
+        }
+
+        if (useWidePad && Time.time > widePadActiveTime)
+        {
+            PowerDownWidePad();
         }
     }
 }

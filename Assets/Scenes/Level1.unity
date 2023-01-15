@@ -299,6 +299,8 @@ MonoBehaviour:
   tileMapCollider: {fileID: 1272156656}
   normalPadSprite: {fileID: 21300000, guid: ffc40d1dafe544c9880c4793d1130fe8, type: 3}
   padWithLaserSprite: {fileID: 21300000, guid: 9befc7337c11548d3aeeb320fdeb8954, type: 3}
+  numOfMultiBalls: 3
+  multiballsSpawnRadius: 3
 --- !u!212 &1111540109
 SpriteRenderer:
   m_ObjectHideFlags: 0
