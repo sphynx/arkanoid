@@ -17,27 +17,41 @@ public class Pad : MonoBehaviour
     GameObject ballPrefab;
 
     [SerializeField]
+    GameObject laserBeamPrefab;
+
+    [SerializeField]
     float ballImpulse;
 
     [SerializeField]
     float widePadTime;
 
     [SerializeField]
+    float laserTime;
+
+    [SerializeField]
     TilemapCollider2D tileMapCollider;
+
+    [SerializeField]
+    Sprite normalPadSprite;
+
+    [SerializeField]
+    Sprite padWithLaserSprite;
 
     SpriteRenderer spriteRenderer;
 
     float velocity;
     bool glueBall;
-
+    bool useLaser;
     List<Ball> ballsOnPad;
 
     void Start()
     {
         velocity = 0f;
         glueBall = true;
+        useLaser = false;
         ballsOnPad = new List<Ball>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
         SpawnBallOnPad();
     }
 
@@ -70,7 +84,10 @@ public class Pad : MonoBehaviour
         var displacement = velocity * Time.fixedDeltaTime;
         var pos = transform.localPosition;
         var newX = pos.x + displacement;
+
+        // TODO: set this based on resolution.
         newX = Mathf.Clamp(newX, -15.5f, 15.5f);
+
         var newPos = new Vector3(newX, pos.y, 0);
 
         transform.localPosition = newPos;
@@ -80,20 +97,24 @@ public class Pad : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("MultiballBonus"))
         {
+            // TODO: make this configurable
             SpawnMultiBalls(3, 3f);
         }
         else if (collision.gameObject.CompareTag("WidePadBonus"))
         {
             WidenPad();
         }
-        else if (collision.gameObject.CompareTag("GunBonus"))
+        else if (collision.gameObject.CompareTag("StickyBonus"))
         {
             MakeSticky();
+        }
+        else if (collision.gameObject.CompareTag("LaserBonus"))
+        {
+            UseLaser();
         }
 
         Destroy(collision.gameObject);
     }
-
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -157,6 +178,13 @@ public class Pad : MonoBehaviour
         StartCoroutine(nameof(ResetWidePad));
     }
 
+    void UseLaser()
+    {
+        useLaser = true;
+        spriteRenderer.sprite = padWithLaserSprite;
+        StartCoroutine(nameof(PowerDownLaser));
+    }
+
     IEnumerator ResetWidePad()
     {
         yield return new WaitForSeconds(widePadTime);
@@ -166,8 +194,15 @@ public class Pad : MonoBehaviour
         spriteRenderer.size = new Vector2(defaultWidth, 1f);
     }
 
+    IEnumerator PowerDownLaser()
+    {
+        yield return new WaitForSeconds(laserTime);
 
-    void FireInRandomDirection()
+        useLaser = false;
+        spriteRenderer.sprite = normalPadSprite;
+    }
+
+    void FireBallsInRandomDirections()
     {
         glueBall = false;
 
@@ -191,16 +226,33 @@ public class Pad : MonoBehaviour
         ballsOnPad.Add(ball);
     }
 
+    void FireLaser()
+    {
+        float height = spriteRenderer.sprite.bounds.size.y;
+        float width = height * spriteRenderer.size.x;
+
+        Vector3 leftPos = new Vector3(-width / 2f + 0.18f, height - 0.2f, 0f);
+        Vector3 rightPos = new Vector3(width / 2f - 0.18f, height - 0.2f, 0f);
+
+        Instantiate(laserBeamPrefab, transform.position + leftPos, Quaternion.identity);
+        Instantiate(laserBeamPrefab, transform.position + rightPos, Quaternion.identity);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            FireInRandomDirection();
+            FireBallsInRandomDirections();
+
+            if (useLaser)
+            {
+                FireLaser();
+            }
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            // maybe just return the ball to the pad instead?
-            SceneManager.LoadScene(0);
+            if (ballsOnPad.Count == 0)
+                SpawnBallOnPad();
         }
     }
 }
