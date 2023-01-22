@@ -32,18 +32,20 @@ public class Pad : MonoBehaviour
     TilemapCollider2D tileMapCollider;
 
     [SerializeField]
-    Sprite normalPadSprite;
-
-    [SerializeField]
-    Sprite padWithLaserSprite;
-
-    [SerializeField]
     int numOfMultiBalls;
 
     [SerializeField]
     float multiballsSpawnRadius;
 
+    [SerializeField]
+    IntVar score;
+
+    [SerializeField]
+    IntVar lives;
+
     SpriteRenderer spriteRenderer;
+
+    Animator animator;
 
     float velocity;
 
@@ -68,6 +70,7 @@ public class Pad : MonoBehaviour
 
         ballsOnPad = new List<Ball>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         SpawnBallOnPad();
     }
@@ -198,7 +201,7 @@ public class Pad : MonoBehaviour
     void UseLaser()
     {
         useLaser = true;
-        spriteRenderer.sprite = padWithLaserSprite;
+        animator.SetBool("Has Laser", useLaser);
         laserActiveTime = Time.time + laserTime;
     }
 
@@ -213,7 +216,7 @@ public class Pad : MonoBehaviour
     void PowerDownLaser()
     {
         useLaser = false;
-        spriteRenderer.sprite = normalPadSprite;
+        animator.SetBool("Has Laser", useLaser);
     }
 
     void FireBallsInRandomDirections()
@@ -252,6 +255,24 @@ public class Pad : MonoBehaviour
         Instantiate(laserBeamPrefab, transform.position + rightPos, Quaternion.identity);
     }
 
+    void OnLostLife()
+    {
+        lives.Value -= 1;
+        if (lives.Value == 0)
+        {
+            GameOver();
+        }
+        else
+        {
+            SpawnBallOnPad();
+        };
+    }
+
+    void GameOver()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -276,5 +297,9 @@ public class Pad : MonoBehaviour
         {
             PowerDownWidePad();
         }
+
+        var balls = Object.FindObjectsOfType<Ball>();
+        if (balls.Length == 0)
+            OnLostLife();
     }
 }
