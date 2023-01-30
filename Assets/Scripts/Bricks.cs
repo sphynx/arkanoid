@@ -11,6 +11,9 @@ public class Bricks : MonoBehaviour
     [SerializeField]
     BonusSpawner bonusSpawner;
 
+    [SerializeField]
+    GameObject brickExplosionPrefab;
+
     public Vector3 location;
 
     private void Update()
@@ -32,7 +35,7 @@ public class Bricks : MonoBehaviour
         var x = hit.point.x + 0.02f * hit.normal.x;
         var y = hit.point.y + 0.02f * hit.normal.y;
         var hitPos = new Vector3(x, y, 0f);
-        var cell = tilemap.WorldToCell(hitPos);
+        Vector3Int cell = tilemap.WorldToCell(hitPos);
 
         // Either remove the brick completely or replace it with the broken tile:
         TileBase tile = tilemap.GetTile(cell);
@@ -41,6 +44,19 @@ public class Bricks : MonoBehaviour
         {
             TileBase nextTile = bricksMapping.Break(tile); // can be null
             tilemap.SetTile(cell, nextTile);
+
+            if (nextTile == null)
+            {
+                Vector3 explosionPos = tilemap.GetCellCenterWorld(cell);
+                GameObject brickExplosionObj = Instantiate(brickExplosionPrefab, explosionPos, Quaternion.identity);
+                ParticleSystem brickExplosionPS = brickExplosionObj.GetComponent<ParticleSystem>();
+
+                var shape = brickExplosionPS.shape;
+                float zRotation = -Vector2.SignedAngle(Vector2.right, hit.normal) - shape.arc / 2f;
+                shape.rotation = new Vector3(shape.rotation.x, shape.rotation.y, zRotation);
+
+                brickExplosionPS.Play();
+            }
 
             if (nextTile == null)
             {
