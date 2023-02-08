@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-using System.Collections;
 using System.Collections.Generic;
 
 public class Pad : MonoBehaviour
@@ -42,6 +41,12 @@ public class Pad : MonoBehaviour
 
     [SerializeField]
     IntVar lives;
+
+    [SerializeField]
+    AudioSource bonusSound;
+
+    [SerializeField]
+    AudioSource ballHitSound;
 
     SpriteRenderer spriteRenderer;
 
@@ -118,18 +123,22 @@ public class Pad : MonoBehaviour
         if (collision.gameObject.CompareTag("MultiballBonus"))
         {
             SpawnMultiBalls(numOfMultiBalls, multiballsSpawnRadius);
+            bonusSound.Play();
         }
         else if (collision.gameObject.CompareTag("WidePadBonus"))
         {
             WidenPad();
+            bonusSound.Play();
         }
         else if (collision.gameObject.CompareTag("StickyBonus"))
         {
             MakeSticky();
+            bonusSound.Play();
         }
         else if (collision.gameObject.CompareTag("LaserBonus"))
         {
             UseLaser();
+            bonusSound.Play();
         }
 
         Destroy(collision.gameObject);
@@ -145,6 +154,10 @@ public class Pad : MonoBehaviour
             {
                 ball.GlueToPad(this.gameObject);
                 ballsOnPad.Add(ball);
+            }
+            else if (!ballsOnPad.Contains(ball))
+            {
+                ballHitSound.Play();
             }
         }
     }
