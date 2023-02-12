@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using UnityEngine.Events;
 
 using System.Collections.Generic;
 
@@ -43,13 +44,12 @@ public class Pad : MonoBehaviour
     IntVar lives;
 
     [SerializeField]
-    AudioSource bonusSound;
+    UnityEvent ballHitsPadEvent;
 
     [SerializeField]
-    AudioSource ballHitSound;
+    StringEvent bonusPickupEvent;
 
     SpriteRenderer spriteRenderer;
-
     Animator animator;
 
     float velocity;
@@ -123,22 +123,22 @@ public class Pad : MonoBehaviour
         if (collision.gameObject.CompareTag("MultiballBonus"))
         {
             SpawnMultiBalls(numOfMultiBalls, multiballsSpawnRadius);
-            bonusSound.Play();
+            bonusPickupEvent.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("WidePadBonus"))
         {
             WidenPad();
-            bonusSound.Play();
+            bonusPickupEvent.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("StickyBonus"))
         {
             MakeSticky();
-            bonusSound.Play();
+            bonusPickupEvent.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("LaserBonus"))
         {
             UseLaser();
-            bonusSound.Play();
+            bonusPickupEvent.Invoke(collision.gameObject.tag);
         }
 
         Destroy(collision.gameObject);
@@ -157,7 +157,7 @@ public class Pad : MonoBehaviour
             }
             else if (!ballsOnPad.Contains(ball))
             {
-                ballHitSound.Play();
+                ballHitsPadEvent.Invoke();
             }
         }
     }

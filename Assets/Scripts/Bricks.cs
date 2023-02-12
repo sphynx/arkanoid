@@ -15,15 +15,6 @@ public class Bricks : MonoBehaviour
     GameObject brickExplosionPrefab;
 
     [SerializeField]
-    Material yellowParticleMaterial;
-
-    [SerializeField]
-    Material redParticleMaterial;
-
-    [SerializeField]
-    Material greenParticleMaterial;
-
-    [SerializeField]
     AudioSource brickHitSound;
 
     public Vector3 location;
@@ -75,29 +66,8 @@ public class Bricks : MonoBehaviour
     void ExplodeBrick(Vector3 hitPos, Vector3 normal, TileBase tile)
     {
         GameObject brickExplosionObj = Instantiate(brickExplosionPrefab, hitPos, Quaternion.identity);
-        ParticleSystem brickExplosionPS = brickExplosionObj.GetComponent<ParticleSystem>();
-        var shape = brickExplosionPS.shape;
-
-        float zRotation = Vector2.SignedAngle(Vector2.right, -normal) - shape.arc / 2f;
-        shape.rotation = new Vector3(shape.rotation.x, shape.rotation.y, zRotation);
-
-        ParticleSystemRenderer psRenderer = brickExplosionObj.GetComponent<ParticleSystemRenderer>();
-
-        // This is kinda terrible, we dispatch over names of the tiles to set the correct material.
-        if (tile.name == "GreenTile" || tile.name == "GreenBrokenTile")
-        {
-            psRenderer.material = greenParticleMaterial;
-        }
-        else if (tile.name == "RedTile" || tile.name == "RedBrokenTile")
-        {
-            psRenderer.material = redParticleMaterial;
-        }
-        else if (tile.name == "YellowTile" || tile.name == "YellowBrokenTile")
-        {
-            psRenderer.material = yellowParticleMaterial;
-        }
-
-        brickExplosionPS.Play();
+        Explosion brickExplosion = brickExplosionObj.GetComponent<Explosion>();
+        brickExplosion.Play(tile, normal);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
