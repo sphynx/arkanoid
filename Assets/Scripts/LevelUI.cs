@@ -11,7 +11,6 @@ public class LevelUI : MonoBehaviour
     [SerializeField]
     TMP_Text levelText;
 
-
     [SerializeField]
     GameObject heartPrefab;
 

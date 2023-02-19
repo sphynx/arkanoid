@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -28,12 +29,14 @@ public class GameLogic : MonoBehaviour
     {
         Pad.OnLostLife += HandleOnLostLife;
         Bricks.OnAllBricksDestroyed += HandleNextLevel;
+        Bricks.OnBrickDestroyed += HandleBrokenBrick;
     }
 
     private void OnDisable()
     {
         Pad.OnLostLife -= HandleOnLostLife;
         Bricks.OnAllBricksDestroyed -= HandleNextLevel;
+        Bricks.OnBrickDestroyed += HandleBrokenBrick;
     }
 
     private void Start()
@@ -67,10 +70,8 @@ public class GameLogic : MonoBehaviour
         LoadLevel();
     }
 
-    public void LoadLevel()
+    void LoadLevel()
     {
-        Debug.Log($"Loading level: {level.Value}");
-
         int levelNo = level.Value;
 
         if (levelNo >= 1 && levelNo <= levelPrefabs.Length)
@@ -85,5 +86,10 @@ public class GameLogic : MonoBehaviour
             GameObject levelPrefab = levelPrefabs[levelNo - 1];
             Instantiate(levelPrefab, levelContainer);
         }
+    }
+
+    void HandleBrokenBrick(TileBase brick)
+    {
+        score.Value += 1;
     }
 }

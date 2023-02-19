@@ -6,6 +6,7 @@ using static UnityEditor.PlayerSettings;
 public class Bricks : MonoBehaviour
 {
     public static event Action<TileBase> OnBrickHit;
+    public static event Action<TileBase> OnBrickDestroyed;
     public static event Action OnAllBricksDestroyed;
 
     [SerializeField]
@@ -74,6 +75,8 @@ public class Bricks : MonoBehaviour
 
         if (nextTile == null)
         {
+            OnBrickDestroyed?.Invoke(tile);
+
             // Potentially spawn bonus if brick has been broken.
             Vector3 bonusPos = tilemap.GetCellCenterWorld(cell);
             GameObject bonus = bonusSpawner.SpawnBonus(bonusPos);
