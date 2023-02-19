@@ -1,8 +1,13 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
+using System;
 
 public class Bricks : MonoBehaviour
 {
+    public static event Action<TileBase> OnBrickHit;
+
     Tilemap tilemap;
 
     [SerializeField]
@@ -14,15 +19,8 @@ public class Bricks : MonoBehaviour
     [SerializeField]
     GameObject brickExplosionPrefab;
 
-    [SerializeField]
-    AudioSource brickHitSound;
-
-    public Vector3 location;
-
-    private void Update()
-    {
-        location = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
+    //[SerializeField]
+    //TileEvent brickHitEvent;
 
     private void Awake()
     {
@@ -45,32 +43,40 @@ public class Bricks : MonoBehaviour
 
         if (tile != null)
         {
-            TileBase nextTile = bricksMapping.Break(tile); // can be null
-            tilemap.SetTile(cell, nextTile);
+            HitBrick(tile, cell, hitPos, hit.normal);
+        }
+    }
 
-            brickHitSound.Play();
+    private void HitBrick(TileBase tile, Vector3Int cell, Vector3 hitPos, Vector3 hitNormal)
+    {
+        TileBase nextTile = bricksMapping.Break(tile); // can be null, if we break the brick
+        tilemap.SetTile(cell, nextTile);
 
-            if (nextTile == null)
+        //brickHitEvent.Invoke(tile);
+        OnBrickHit?.Invoke(tile);
+
+        if (nextTile == null)
+        {
+            // Potentially spawn bonus if brick has been broken.
+            Vector3 bonusPos = tilemap.GetCellCenterWorld(cell);
+            GameObject bonus = bonusSpawner.SpawnBonus(bonusPos);
+
+            if (bonus == null)
             {
-                Vector3 bonusPos = tilemap.GetCellCenterWorld(cell);
-                GameObject bonus = bonusSpawner.SpawnBonus(bonusPos);
-
-                if (bonus == null)
-                {
-                    ExplodeBrick(hitPos, hit.normal, tile);
-                }
+                // Also play explosion effect if there is no bonus.
+                ExplodeBrick(hitPos, hitNormal, tile);
             }
         }
     }
 
-    void ExplodeBrick(Vector3 hitPos, Vector3 normal, TileBase tile)
+    private void ExplodeBrick(Vector3 hitPos, Vector3 normal, TileBase tile)
     {
         GameObject brickExplosionObj = Instantiate(brickExplosionPrefab, hitPos, Quaternion.identity);
         Explosion brickExplosion = brickExplosionObj.GetComponent<Explosion>();
         brickExplosion.Play(tile, normal);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject gameObj = collision.gameObject;
 

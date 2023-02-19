@@ -4,9 +4,16 @@ using UnityEngine.Tilemaps;
 using UnityEngine.Events;
 
 using System.Collections.Generic;
+using System;
+
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 public class Pad : MonoBehaviour
 {
+    public static event Action OnPadHitsBall;
+    public static event Action<string> OnBonusPickup;
+
     [SerializeField]
     float maxAcceleration;
 
@@ -17,43 +24,32 @@ public class Pad : MonoBehaviour
     GameObject ballPrefab;
 
     [SerializeField]
-    GameObject laserBeamPrefab;
-
-    [SerializeField]
     float ballImpulse;
 
     [SerializeField]
-    float widePadTime;
+    GameObject laserBeamPrefab;
 
     [SerializeField]
     float laserTime;
 
     [SerializeField]
-    TilemapCollider2D tileMapCollider;
+    BonusesLogic bonusLogic;
 
     [SerializeField]
-    int numOfMultiBalls;
+    float widePadTime;
 
     [SerializeField]
-    float multiballsSpawnRadius;
+    IntVar score; // game logic
 
     [SerializeField]
-    IntVar score;
+    IntVar lives; // game logic
 
-    [SerializeField]
-    IntVar lives;
-
-    [SerializeField]
-    UnityEvent ballHitsPadEvent;
-
-    [SerializeField]
-    StringEvent bonusPickupEvent;
-
-    SpriteRenderer spriteRenderer;
-    Animator animator;
+    SpriteRenderer spriteRenderer; // needed for widening the pad + determining size of the pad for lasers
+    Animator animator; // needed to change the animation based on whether we have laser or not
 
     float velocity;
 
+    // prvate vars related to bonuses:
     bool glueBall;
     bool useLaser;
     bool useWidePad;
@@ -122,23 +118,23 @@ public class Pad : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("MultiballBonus"))
         {
-            SpawnMultiBalls(numOfMultiBalls, multiballsSpawnRadius);
-            bonusPickupEvent.Invoke(collision.gameObject.tag);
+            bonusLogic.SpawnMultiBalls();
+            OnBonusPickup?.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("WidePadBonus"))
         {
             WidenPad();
-            bonusPickupEvent.Invoke(collision.gameObject.tag);
+            OnBonusPickup?.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("StickyBonus"))
         {
             MakeSticky();
-            bonusPickupEvent.Invoke(collision.gameObject.tag);
+            OnBonusPickup?.Invoke(collision.gameObject.tag);
         }
         else if (collision.gameObject.CompareTag("LaserBonus"))
         {
             UseLaser();
-            bonusPickupEvent.Invoke(collision.gameObject.tag);
+            OnBonusPickup?.Invoke(collision.gameObject.tag);
         }
 
         Destroy(collision.gameObject);
@@ -157,44 +153,7 @@ public class Pad : MonoBehaviour
             }
             else if (!ballsOnPad.Contains(ball))
             {
-                ballHitsPadEvent.Invoke();
-            }
-        }
-    }
-
-    void SpawnMultiBalls(int numBalls, float spawnRadius)
-    {
-        // Find some ball (it can return any with that tag):
-        GameObject ball = GameObject.FindWithTag("Ball");
-
-        if (ball == null)
-            return;
-
-        // Spawn new N balls around it in a circular pattern
-        for (int i = 0; i < numBalls; i++)
-        {
-            float angle = 2 * Mathf.PI * i / numBalls;
-
-            float dirX = Mathf.Cos(angle);
-            float dirY = Mathf.Sin(angle);
-
-            Vector3 center = ball.transform.position;
-            Vector3 where = center + new Vector3(dirX, dirY, 0f) * spawnRadius;
-
-            // This is some tricky business to prevent balls appearing within the bricks collider :)
-            // Note we can do it differently: using OverlapCircle from Physics2D and check that
-            // tileMap collider is not in the returned array of colliders.
-            if (!tileMapCollider.composite.OverlapPoint(where))
-            {
-                Vector2 closestPoint = tileMapCollider.composite.ClosestPoint(where);
-                float distance = Vector2.Distance(closestPoint, where);
-
-                if (distance > 0.75f)
-                {
-                    GameObject newBallObj = Instantiate(ballPrefab, where, Quaternion.identity);
-                    Ball newBall = newBallObj.GetComponent<Ball>();
-                    newBall.Fire(new Vector2(dirX, dirY) * ballImpulse);
-                }
+                OnPadHitsBall?.Invoke();
             }
         }
     }
