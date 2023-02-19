@@ -9,6 +9,10 @@ public class LevelUI : MonoBehaviour
     TMP_Text scoreText;
 
     [SerializeField]
+    TMP_Text levelText;
+
+
+    [SerializeField]
     GameObject heartPrefab;
 
     [SerializeField]
@@ -17,7 +21,31 @@ public class LevelUI : MonoBehaviour
     [SerializeField]
     IntVar lives;
 
-    private List<GameObject> hearts;
+    List<GameObject> hearts;
+    Animator levelTextAnimator;
+
+    void Start()
+    {
+        scoreText.text = "";
+        hearts = new List<GameObject>();
+        levelTextAnimator = levelText.GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        SetScore(score.Value);
+        SetLives(lives.Value);
+    }
+
+    private void OnEnable()
+    {
+        GameLogic.OnLevelChange += SetLevel;
+    }
+
+    private void OnDisable()
+    {
+        GameLogic.OnLevelChange -= SetLevel;
+    }
 
     void SetLives(int lives)
     {
@@ -45,15 +73,9 @@ public class LevelUI : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    void Start()
+    void SetLevel(int level)
     {
-        scoreText.text = "";
-        hearts = new List<GameObject>();
-    }
-
-    void Update()
-    {
-        SetScore(score.Value);    
-        SetLives(lives.Value);
+        levelText.text = $"Level {level}";
+        levelTextAnimator.Play("LevelTitleAnim", -1, 0f);
     }
 }

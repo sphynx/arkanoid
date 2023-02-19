@@ -7,6 +7,7 @@ using System;
 public class GameLogic : MonoBehaviour
 {
     public static event Action OnGameOver;
+    public static event Action<int> OnLevelChange;
 
     [SerializeField]
     IntVar lives;
@@ -62,6 +63,7 @@ public class GameLogic : MonoBehaviour
     void HandleNextLevel()
     {
         level.Value += 1;
+        OnLevelChange?.Invoke(level.Value);
         LoadLevel();
     }
 
