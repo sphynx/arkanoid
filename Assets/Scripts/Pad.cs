@@ -13,6 +13,7 @@ public class Pad : MonoBehaviour
 {
     public static event Action OnPadHitsBall;
     public static event Action<string> OnBonusPickup;
+    public static event Action OnLostLife;
 
     [SerializeField]
     float maxAcceleration;
@@ -37,12 +38,6 @@ public class Pad : MonoBehaviour
 
     [SerializeField]
     float widePadTime;
-
-    [SerializeField]
-    IntVar score; // game logic
-
-    [SerializeField]
-    IntVar lives; // game logic
 
     SpriteRenderer spriteRenderer; // needed for widening the pad + determining size of the pad for lasers
     Animator animator; // needed to change the animation based on whether we have laser or not
@@ -227,22 +222,9 @@ public class Pad : MonoBehaviour
         Instantiate(laserBeamPrefab, transform.position + rightPos, Quaternion.identity);
     }
 
-    void OnLostLife()
+    void HandleOnLostLife()
     {
-        lives.Value -= 1;
-        if (lives.Value == 0)
-        {
-            GameOver();
-        }
-        else
-        {
-            SpawnBallOnPad();
-        };
-    }
-
-    void GameOver()
-    {
-        SceneManager.LoadScene("GameOver");
+        SpawnBallOnPad();
     }
 
     void Update()
@@ -272,6 +254,9 @@ public class Pad : MonoBehaviour
 
         var balls = Object.FindObjectsOfType<Ball>();
         if (balls.Length == 0)
-            OnLostLife();
+        {
+            OnLostLife?.Invoke();
+            HandleOnLostLife();
+        }
     }
 }

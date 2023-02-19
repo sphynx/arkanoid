@@ -1,14 +1,12 @@
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 using System;
+using static UnityEditor.PlayerSettings;
 
 public class Bricks : MonoBehaviour
 {
     public static event Action<TileBase> OnBrickHit;
-
-    Tilemap tilemap;
+    public static event Action OnAllBricksDestroyed;
 
     [SerializeField]
     BricksStateMapping bricksMapping;
@@ -19,12 +17,29 @@ public class Bricks : MonoBehaviour
     [SerializeField]
     GameObject brickExplosionPrefab;
 
-    //[SerializeField]
-    //TileEvent brickHitEvent;
+    Tilemap tilemap;
 
     private void Awake()
     {
         tilemap = gameObject.GetComponent<Tilemap>();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject gameObj = collision.gameObject;
+
+        if (gameObj.CompareTag("Ball") || gameObj.CompareTag("LaserBeam"))
+        {
+            foreach (ContactPoint2D hit in collision.contacts)
+            {
+                HandleContact(hit);
+            }
+        }
+
+        if (gameObj.CompareTag("LaserBeam"))
+        {
+            Destroy(gameObj);
+        }
     }
 
     private void HandleContact(ContactPoint2D hit)
@@ -39,7 +54,7 @@ public class Bricks : MonoBehaviour
         Vector3Int cell = tilemap.WorldToCell(hitPos);
 
         // Either remove the brick completely or replace it with the broken tile:
-        TileBase tile = tilemap.GetTile(cell);
+        Tile tile = tilemap.GetTile<Tile>(cell);
 
         if (tile != null)
         {
@@ -47,13 +62,15 @@ public class Bricks : MonoBehaviour
         }
     }
 
-    private void HitBrick(TileBase tile, Vector3Int cell, Vector3 hitPos, Vector3 hitNormal)
+    private void HitBrick(Tile tile, Vector3Int cell, Vector3 hitPos, Vector3 hitNormal)
     {
         TileBase nextTile = bricksMapping.Break(tile); // can be null, if we break the brick
         tilemap.SetTile(cell, nextTile);
 
-        //brickHitEvent.Invoke(tile);
         OnBrickHit?.Invoke(tile);
+
+        if (NumberOfRemainingBricks() == 0)
+            OnAllBricksDestroyed?.Invoke();
 
         if (nextTile == null)
         {
@@ -68,29 +85,25 @@ public class Bricks : MonoBehaviour
             }
         }
     }
-
-    private void ExplodeBrick(Vector3 hitPos, Vector3 normal, TileBase tile)
+    
+    private void ExplodeBrick(Vector3 hitPos, Vector3 normal, Tile tile)
     {
         GameObject brickExplosionObj = Instantiate(brickExplosionPrefab, hitPos, Quaternion.identity);
         Explosion brickExplosion = brickExplosionObj.GetComponent<Explosion>();
         brickExplosion.Play(tile, normal);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private int NumberOfRemainingBricks()
     {
-        GameObject gameObj = collision.gameObject;
+        int res = 0;
 
-        if (gameObj.CompareTag("Ball") || gameObj.CompareTag("LaserBeam"))
+        BoundsInt bounds = tilemap.cellBounds;
+        foreach (Vector3Int pos in bounds.allPositionsWithin)
         {
-            foreach (ContactPoint2D hit in collision.contacts)
-            {
-                HandleContact(hit);
-            }
+            if (tilemap.HasTile(pos))
+                res += 1;
         }
-        
-        if (gameObj.CompareTag("LaserBeam"))
-        {
-            Destroy(gameObj);
-        }
+
+        return res;
     }
 }

@@ -11,12 +11,6 @@ public class GameOverUI : MonoBehaviour
     private IntVar hiScore;
 
     [SerializeField]
-    IntVar lives;
-
-    [SerializeField]
-    IntVar startLives;
-
-    [SerializeField]
     private TMP_Text scoreText;
 
     [SerializeField]
@@ -35,8 +29,7 @@ public class GameOverUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            lives.Value = startLives.Value;
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("Levels");
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
