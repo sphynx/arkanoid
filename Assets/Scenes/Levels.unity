@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 747932116}
   - component: {fileID: 747932119}
   - component: {fileID: 747932118}
-  - component: {fileID: 747932117}
+  - component: {fileID: 747932120}
   m_Layer: 5
   m_Name: LevelText
   m_TagString: Untagged
@@ -402,26 +402,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000007629, y: 58.414}
   m_SizeDelta: {x: 355.9327, y: 116.8283}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &747932117
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747932115}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5bcb58c1c500244a59ba62a155ad95ec, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &747932118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,6 +499,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 747932115}
   m_CullTransparentMesh: 1
+--- !u!95 &747932120
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747932115}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f84ec14018b104de79262d9ee10af730, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &823077566
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,7 +819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1987640187}
-  levelText: {fileID: 262980848}
+  levelText: {fileID: 747932118}
   hintText: {fileID: 262980848}
   heartPrefab: {fileID: 6530497766250277715, guid: 913643804fd8e43e6b335b6940f56dbd, type: 3}
   score: {fileID: 11400000, guid: 0bbeb26497fd1467c8ea9835a74a4478, type: 2}

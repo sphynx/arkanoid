@@ -85,8 +85,8 @@ public class LevelUI : MonoBehaviour
     void SetLevel(int level)
     {
         levelText.text = $"Level {level}";
-        levelTextAnimator.Play("LevelTitleAnim", -1, 0f);
-    }
+        levelTextAnimator.Play("LevelAnim", -1, 0f);
+     }
 
     void HandleBonus(string bonus)
     {
@@ -102,7 +102,7 @@ public class LevelUI : MonoBehaviour
         {
             hintText.text = hint;
             hintTextAnimator.enabled = true;
-            hintTextAnimator.Play("HintTextAnim", -1, 0f);
+            hintTextAnimator.Play("HintAnim", -1, 0f);
             shownHints.Add(hint);
         }
     }

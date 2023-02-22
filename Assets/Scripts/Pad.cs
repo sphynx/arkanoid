@@ -69,6 +69,7 @@ public class Pad : MonoBehaviour
         animator = GetComponent<Animator>();
 
         SpawnBallOnPad();
+        WidenPad();
     }
 
     void FixedUpdate()
@@ -88,9 +89,9 @@ public class Pad : MonoBehaviour
 
         // And the third way is just to use -1 or 1 for velocity:
         float userInput;
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Z))
             userInput = -1f;
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.X))
             userInput = 1f;
         else
             userInput = 0;
@@ -101,8 +102,14 @@ public class Pad : MonoBehaviour
         var pos = transform.localPosition;
         var newX = pos.x + displacement;
 
-        // TODO: set this based on resolution and current width of pad.
-        newX = Mathf.Clamp(newX, -15.5f, 15.5f);
+        if (useWidePad)
+        {
+            newX = Mathf.Clamp(newX, -14.2f, 14.2f);
+        }
+        else
+        {
+            newX = Mathf.Clamp(newX, -15.5f, 15.5f);
+        }
 
         var newPos = new Vector3(newX, pos.y, 0);
 

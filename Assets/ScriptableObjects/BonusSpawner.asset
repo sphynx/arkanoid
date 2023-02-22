@@ -22,3 +22,6 @@ MonoBehaviour:
   - type: 4
     probability: 10
     prefab: {fileID: 5723069426950297471, guid: 3698b99df247c4dd58ad51e5802abd70, type: 3}
+  - type: 3
+    probability: 5
+    prefab: {fileID: 7053495062923316787, guid: e490ae9f8285a4cf5a853624f181cc74, type: 3}

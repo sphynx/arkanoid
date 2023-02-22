@@ -17,21 +17,13 @@ public class BonusesLogic : MonoBehaviour
     [SerializeField]
     float multiballsSpawnRadius;
 
-    TilemapCollider2D tileMapCollider; // needed to avoid spawning balls inside the bricks on multi-ball bonus.
-
-    private void Start()
-    {
-        tileMapCollider = Object.FindObjectOfType<TilemapCollider2D>();
-        if (tileMapCollider == null)
-        {
-            Debug.LogError("TileMap collider not found");
-        }
-    }
-
     public void SpawnMultiBalls()
     {
         // Find a ball (it can return any with that tag):
         GameObject ball = GameObject.FindWithTag("Ball");
+
+        // needed to avoid spawning balls inside the bricks on multi-ball bonus.
+        TilemapCollider2D tileMapCollider = Object.FindObjectOfType<TilemapCollider2D>();
 
         if (ball == null)
             return;
