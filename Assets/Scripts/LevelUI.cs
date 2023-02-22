@@ -12,6 +12,9 @@ public class LevelUI : MonoBehaviour
     TMP_Text levelText;
 
     [SerializeField]
+    TMP_Text hintText;
+
+    [SerializeField]
     GameObject heartPrefab;
 
     [SerializeField]
@@ -22,12 +25,17 @@ public class LevelUI : MonoBehaviour
 
     List<GameObject> hearts;
     Animator levelTextAnimator;
+    Animator hintTextAnimator;
+
+    HashSet<string> shownHints;
 
     void Start()
     {
         scoreText.text = "";
         hearts = new List<GameObject>();
         levelTextAnimator = levelText.GetComponent<Animator>();
+        hintTextAnimator = hintText.GetComponent<Animator>();
+        shownHints = new HashSet<string>();
     }
 
     void Update()
@@ -39,11 +47,13 @@ public class LevelUI : MonoBehaviour
     private void OnEnable()
     {
         GameLogic.OnLevelChange += SetLevel;
+        Pad.OnBonusPickup += HandleBonus;
     }
 
     private void OnDisable()
     {
         GameLogic.OnLevelChange -= SetLevel;
+        Pad.OnBonusPickup -= HandleBonus;
     }
 
     void SetLives(int lives)
@@ -76,5 +86,24 @@ public class LevelUI : MonoBehaviour
     {
         levelText.text = $"Level {level}";
         levelTextAnimator.Play("LevelTitleAnim", -1, 0f);
+    }
+
+    void HandleBonus(string bonus)
+    {
+        if (bonus == "LaserBonus")
+        {
+            ShowHint("Press space to shoot");
+        }
+    }
+
+    void ShowHint(string hint)
+    {
+        if (!shownHints.Contains(hint))
+        {
+            hintText.text = hint;
+            hintTextAnimator.enabled = true;
+            hintTextAnimator.Play("HintTextAnim", -1, 0f);
+            shownHints.Add(hint);
+        }
     }
 }

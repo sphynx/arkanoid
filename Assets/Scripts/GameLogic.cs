@@ -39,7 +39,7 @@ public class GameLogic : MonoBehaviour
         Bricks.OnBrickDestroyed += HandleBrokenBrick;
     }
 
-    private void Start()
+    private void Awake()
     {
         lives.Value = 3;
         score.Value = 0;
@@ -63,6 +63,12 @@ public class GameLogic : MonoBehaviour
         SceneManager.LoadScene("GameOver");
     }
 
+    void Won()
+    {
+        SceneManager.LoadScene("Won");
+    }
+
+
     void HandleNextLevel()
     {
         level.Value += 1;
@@ -85,6 +91,10 @@ public class GameLogic : MonoBehaviour
             // Load a new one. Note that level numbers are 1-based.
             GameObject levelPrefab = levelPrefabs[levelNo - 1];
             Instantiate(levelPrefab, levelContainer);
+        }
+        else if (levelNo > levelPrefabs.Length)
+        {
+            Won();
         }
     }
 
