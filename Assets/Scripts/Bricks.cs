@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
-using static UnityEditor.PlayerSettings;
 
 public class Bricks : MonoBehaviour
 {
