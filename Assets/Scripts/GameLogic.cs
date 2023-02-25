@@ -8,7 +8,7 @@ using System;
 public class GameLogic : MonoBehaviour
 {
     public static event Action OnGameOver;
-    public static event Action<int> OnLevelChange;
+    public static event Action<int> OnLevelCleared;
 
     [SerializeField]
     IntVar lives;
@@ -36,16 +36,12 @@ public class GameLogic : MonoBehaviour
     {
         Pad.OnLostLife -= HandleOnLostLife;
         Bricks.OnAllBricksDestroyed -= HandleNextLevel;
-        Bricks.OnBrickDestroyed += HandleBrokenBrick;
+        Bricks.OnBrickDestroyed -= HandleBrokenBrick;
     }
 
     private void Awake()
     {
-        lives.Value = 3;
-        score.Value = 0;
-        level.Value = 1;
-
-        LoadLevel();
+        LoadLevelMap(level.Value);
     }
 
     void HandleOnLostLife()
@@ -54,12 +50,14 @@ public class GameLogic : MonoBehaviour
         if (lives.Value == 0)
         {
             OnGameOver?.Invoke();
-            GameOver();
+            StartCoroutine(nameof(GameOver));
         }
     }
 
-    void GameOver()
+    IEnumerator GameOver()
     {
+        yield return new WaitForSeconds(0.5f);
+
         SceneManager.LoadScene("GameOver");
     }
 
@@ -68,27 +66,25 @@ public class GameLogic : MonoBehaviour
         SceneManager.LoadScene("Won");
     }
 
-
     void HandleNextLevel()
     {
-        level.Value += 1;
-        OnLevelChange?.Invoke(level.Value);
-        LoadLevel();
+        OnLevelCleared?.Invoke(level.Value);
+        StartCoroutine(nameof(LoadNewLevel));
     }
 
-    void LoadLevel()
+    IEnumerator LoadNewLevel()
     {
-        int levelNo = level.Value;
+        yield return new WaitForSeconds(0.7f);
 
+        level.Value += 1;
+        SceneManager.LoadScene("Levels");
+    }
+
+    void LoadLevelMap(int levelNo)
+    {
         if (levelNo >= 1 && levelNo <= levelPrefabs.Length)
         {
-            // Destroy existing level, if any.
-            for (int i = 0; i < levelContainer.childCount; i++)
-            {
-                Destroy(levelContainer.GetChild(i).gameObject);
-            }
-
-            // Load a new one. Note that level numbers are 1-based.
+            // Load a level prefab. Note that level numbers are 1-based.
             GameObject levelPrefab = levelPrefabs[levelNo - 1];
             Instantiate(levelPrefab, levelContainer);
         }
@@ -98,7 +94,7 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    void HandleBrokenBrick(TileBase brick)
+    void HandleBrokenBrick(TileBase _brick)
     {
         score.Value += 1;
     }

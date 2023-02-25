@@ -8,6 +8,12 @@ public class GameOverUI : MonoBehaviour
     private IntVar score;
 
     [SerializeField]
+    private IntVar lives;
+
+    [SerializeField]
+    private IntVar level;
+
+    [SerializeField]
     private IntVar hiScore;
 
     [SerializeField]
@@ -29,6 +35,9 @@ public class GameOverUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            level.Reset();
+            lives.Reset();
+            score.Reset();
             SceneManager.LoadScene("Levels");
         }
         else if (Input.GetKeyDown(KeyCode.Escape))

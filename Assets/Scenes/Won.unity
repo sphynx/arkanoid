@@ -579,6 +579,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: {fileID: 11400000, guid: 0bbeb26497fd1467c8ea9835a74a4478, type: 2}
+  lives: {fileID: 11400000, guid: f9230c5653f63493ea9d25242f6e743a, type: 2}
+  level: {fileID: 11400000, guid: 7e217ad8b719f4734959992b529697e8, type: 2}
   hiScore: {fileID: 11400000, guid: ae6c790bed41c428d8931face7dff362, type: 2}
   scoreText: {fileID: 1048678797}
   hiScoreText: {fileID: 1745257147}

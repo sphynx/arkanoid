@@ -4,11 +4,23 @@ public class Ball : MonoBehaviour
 {
     Rigidbody2D body;
     SpriteRenderer spriteRenderer;
+    Animator animator;
+
+    private void OnEnable()
+    {
+        GameLogic.OnLevelCleared += OnLevelCleared;
+    }
+
+    private void OnDisable()
+    {
+        GameLogic.OnLevelCleared -= OnLevelCleared;
+    }
 
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     public void Fire(Vector2 impulse)
@@ -48,7 +60,7 @@ public class Ball : MonoBehaviour
 
     private void AdjustVelocity(Vector2 velocity)
     {
-        const float ADJUST_THRESHOLD = 3f;
+        const float ADJUST_THRESHOLD = 4f;
         const float ADJUST_AMOUNT = 10f;
 
         Vector2[] axes = { Vector2.down, Vector2.right, Vector3.left };
@@ -68,5 +80,12 @@ public class Ball : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void OnLevelCleared(int _level)
+    {
+        body.velocity /= 3f;
+        animator.enabled = true;
+        animator.Play("BallWinsAnim", -1, 0f);
     }
 }

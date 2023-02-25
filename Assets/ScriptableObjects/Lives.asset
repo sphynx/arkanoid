@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354815b31e5624a9c889cc5ec16db581, type: 3}
   m_Name: Lives
   m_EditorClassIdentifier: 
-  Value: 1
+  SavedValue: 3

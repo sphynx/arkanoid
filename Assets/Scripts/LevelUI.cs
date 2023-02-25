@@ -23,6 +23,9 @@ public class LevelUI : MonoBehaviour
     [SerializeField]
     IntVar lives;
 
+    [SerializeField]
+    IntVar level;
+
     List<GameObject> hearts;
     Animator levelTextAnimator;
     Animator hintTextAnimator;
@@ -36,6 +39,8 @@ public class LevelUI : MonoBehaviour
         levelTextAnimator = levelText.GetComponent<Animator>();
         hintTextAnimator = hintText.GetComponent<Animator>();
         shownHints = new HashSet<string>();
+
+        SetLevel(level.Value);
     }
 
     void Update()
@@ -46,13 +51,11 @@ public class LevelUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameLogic.OnLevelChange += SetLevel;
         Pad.OnBonusPickup += HandleBonus;
     }
 
     private void OnDisable()
     {
-        GameLogic.OnLevelChange -= SetLevel;
         Pad.OnBonusPickup -= HandleBonus;
     }
 
@@ -93,6 +96,10 @@ public class LevelUI : MonoBehaviour
         if (bonus == "LaserBonus")
         {
             ShowHint("Press space to shoot");
+        }
+        else if (bonus == "StickyBonus")
+        {
+            ShowHint("Now your pad will be sticky");
         }
     }
 
