@@ -1,20 +1,11 @@
 using UnityEngine;
 
-public enum BonusType
-{
-    WIDE_PAD = 1,
-    MULTIPLE_BALLS = 2,
-    EXTRA_LIFE = 3,
-    GUN = 4,
-}
-
 [CreateAssetMenu]
 public class BonusSpawner : ScriptableObject
 {
     [System.Serializable]
     public class Bonus
     {
-        public BonusType type;
         public float probability;
         public GameObject prefab;
     }

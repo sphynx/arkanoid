@@ -1069,6 +1069,7 @@ MonoBehaviour:
   maxSpeed: 30
   ballPrefab: {fileID: 3039885613299681258, guid: c5e57a9beefc74c328b0267b2496eafe, type: 3}
   ballImpulse: 15
+  ballFireAngleRange: 45
   laserBeamPrefab: {fileID: 4380203898824299432, guid: 1736e7b70bd9e4606b2a4d162cbbfe9b, type: 3}
   laserTime: 3
   laseFireRate: 0.4

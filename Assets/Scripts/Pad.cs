@@ -28,6 +28,9 @@ public class Pad : MonoBehaviour
     float ballImpulse;
 
     [SerializeField]
+    float ballFireAngleRange;
+
+    [SerializeField]
     GameObject laserBeamPrefab;
 
     [SerializeField]
@@ -146,7 +149,7 @@ public class Pad : MonoBehaviour
 
         if (collision.gameObject.TryGetComponent<Ball>(out ball))
         {
-            if (glueBall && !ballsOnPad.Contains(ball))
+            if (glueBall && !ballsOnPad.Contains(ball) && HitsFromTop(collision))
             {
                 ball.GlueToPad(this.gameObject);
                 ballsOnPad.Add(ball);
@@ -156,6 +159,19 @@ public class Pad : MonoBehaviour
                 OnPadHitsBall?.Invoke();
             }
         }
+    }
+
+    bool HitsFromTop(Collision2D collision)
+    {
+        const float ANGLE_TOLERANCE = 3f;
+        if (collision.contactCount > 0)
+        {
+            ContactPoint2D contact = collision.GetContact(0);
+            float angle = Vector2.Angle(contact.normal, Vector2.down);
+            return angle < ANGLE_TOLERANCE;
+        }
+
+        return false;
     }
 
     void MakeSticky()
@@ -197,7 +213,7 @@ public class Pad : MonoBehaviour
 
         foreach (Ball b in this.ballsOnPad)
         {
-            float angle = Random.Range(-45f, 45f);
+            float angle = Random.Range(-ballFireAngleRange, ballFireAngleRange);
             Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.up; 
             b.Fire(ballImpulse * direction);
         };
