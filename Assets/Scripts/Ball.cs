@@ -6,6 +6,9 @@ public class Ball : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Animator animator;
 
+    [SerializeField]
+    float impulseMagnitude;
+
     private void OnEnable()
     {
         GameLogic.OnLevelCleared += OnLevelCleared;
@@ -23,11 +26,30 @@ public class Ball : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void Fire(Vector2 impulse)
+    void FixedUpdate()
+    {
+        // Let's keep balls on the same velocity no matter what.
+        // Sometimes their speed may drop because they are hitting other balls
+        // at different angles. Even though they share the same speed and mass
+        // in the beginning, they may end up having different speeds,
+        // that was quite suprising to me!
+
+        // You can experiment with collisions here:
+        // https://phet.colorado.edu/sims/html/collision-lab/latest/collision-lab_en.html
+        float tolerance = 0.5f;
+        float impulseSquare = impulseMagnitude * impulseMagnitude;
+        if (Mathf.Abs(body.velocity.sqrMagnitude - impulseSquare) > tolerance)
+        {
+            body.velocity = body.velocity.normalized * impulseMagnitude;
+        }
+    }
+
+    public void Fire(Vector2 direction)
     {
         body.isKinematic = false;
         if (transform.parent != null)
             transform.parent = transform.parent.parent; // Free it from the pad-parent.
+        Vector2 impulse = impulseMagnitude * direction;
         body.AddForce(impulse, ForceMode2D.Impulse);
     }
 

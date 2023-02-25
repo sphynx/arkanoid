@@ -9,9 +9,6 @@ public class BonusesLogic : MonoBehaviour
     GameObject ballPrefab;
 
     [SerializeField]
-    float multiballsImpulse;
-
-    [SerializeField]
     int multiballsNumber;
 
     [SerializeField]
@@ -22,11 +19,11 @@ public class BonusesLogic : MonoBehaviour
         // Find a ball (it can return any with that tag):
         GameObject ball = GameObject.FindWithTag("Ball");
 
-        // needed to avoid spawning balls inside the bricks on multi-ball bonus.
-        TilemapCollider2D tileMapCollider = Object.FindObjectOfType<TilemapCollider2D>();
-
         if (ball == null)
             return;
+
+        // Needed to avoid spawning balls inside the bricks.
+        TilemapCollider2D tileMapCollider = Object.FindObjectOfType<TilemapCollider2D>();
 
         // Spawn new N balls around it in a circular pattern
         for (int i = 0; i < multiballsNumber; i++)
@@ -51,7 +48,8 @@ public class BonusesLogic : MonoBehaviour
                 {
                     GameObject newBallObj = Instantiate(ballPrefab, where, Quaternion.identity);
                     Ball newBall = newBallObj.GetComponent<Ball>();
-                    newBall.Fire(new Vector2(dirX, dirY) * multiballsImpulse);
+                    Vector2 dir = new Vector2(dirX, dirY);
+                    newBall.Fire(dir);
                 }
             }
         }

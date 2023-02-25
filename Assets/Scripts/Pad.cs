@@ -25,9 +25,6 @@ public class Pad : MonoBehaviour
     GameObject ballPrefab;
 
     [SerializeField]
-    float ballImpulse;
-
-    [SerializeField]
     float ballFireAngleRange;
 
     [SerializeField]
@@ -215,7 +212,7 @@ public class Pad : MonoBehaviour
         {
             float angle = Random.Range(-ballFireAngleRange, ballFireAngleRange);
             Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.up; 
-            b.Fire(ballImpulse * direction);
+            b.Fire(direction);
         };
 
         this.ballsOnPad = new List<Ball>();

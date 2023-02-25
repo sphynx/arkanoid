@@ -579,7 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c11438b786244a7975c171764984ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPrefab: {fileID: 3473124284568247994, guid: c5e57a9beefc74c328b0267b2496eafe, type: 3}
+  ballPrefab: {fileID: 3039885613299681258, guid: c5e57a9beefc74c328b0267b2496eafe, type: 3}
   multiballsImpulse: 15
   multiballsNumber: 3
   multiballsSpawnRadius: 2
