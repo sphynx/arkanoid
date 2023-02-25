@@ -1017,7 +1017,7 @@ GameObject:
   - component: {fileID: 1402041021}
   m_Layer: 11
   m_Name: BricksGrid
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1058,7 +1058,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1402041018}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d49725992f7814a0a84d6f8df16cb7d0, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1084,7 +1084,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1402041018}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d49725992f7814a0a84d6f8df16cb7d0, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1110,7 +1110,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1402041018}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d49725992f7814a0a84d6f8df16cb7d0, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

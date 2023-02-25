@@ -11,6 +11,7 @@ TagManager:
   - StickyBonus
   - LaserBonus
   - LaserBeam
+  - Wall
   layers:
   - Default
   - TransparentFX

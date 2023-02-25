@@ -69,7 +69,6 @@ public class Pad : MonoBehaviour
         animator = GetComponent<Animator>();
 
         SpawnBallOnPad();
-        WidenPad();
     }
 
     void FixedUpdate()
@@ -102,14 +101,8 @@ public class Pad : MonoBehaviour
         var pos = transform.localPosition;
         var newX = pos.x + displacement;
 
-        if (useWidePad)
-        {
-            newX = Mathf.Clamp(newX, -14.2f, 14.2f);
-        }
-        else
-        {
-            newX = Mathf.Clamp(newX, -15.5f, 15.5f);
-        }
+        float padRange = useWidePad ? 14.2f : 15.5f;
+        newX = Mathf.Clamp(newX, -padRange, padRange);
 
         var newPos = new Vector3(newX, pos.y, 0);
 
@@ -199,10 +192,9 @@ public class Pad : MonoBehaviour
 
         foreach (Ball b in this.ballsOnPad)
         {
-            float angle = Random.Range(Mathf.PI / 4f, Mathf.PI * 3f / 4f);
-            float x = Mathf.Cos(angle);
-            float y = Mathf.Sin(angle);
-            b.Fire(new Vector2(x, y) * ballImpulse);
+            float angle = Random.Range(-45f, 45f);
+            Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.up; 
+            b.Fire(ballImpulse * direction);
         };
 
         this.ballsOnPad = new List<Ball>();
