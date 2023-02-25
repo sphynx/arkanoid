@@ -15,3 +15,5 @@ MonoBehaviour:
   AllBricks:
   - goodBrick: {fileID: 11400000, guid: 7e349c1e1e35e4d528b0bf22c11aa388, type: 2}
     brokenBrick: {fileID: 11400000, guid: 3ab4d810fba554d11851699587ebbbab, type: 2}
+  - goodBrick: {fileID: 11400000, guid: b73bb1f3bd5064198b94f2b505a6dd76, type: 2}
+    brokenBrick: {fileID: 11400000, guid: 58244a8750e2244b2ba40d21b069efd9, type: 2}

@@ -20,7 +20,7 @@ public class GameLogic : MonoBehaviour
     IntVar level;
 
     [SerializeField]
-    Transform levelContainer;
+    GameObject levelContainer;
 
     [SerializeField]
     GameObject[] levelPrefabs;
@@ -84,9 +84,17 @@ public class GameLogic : MonoBehaviour
     {
         if (levelNo >= 1 && levelNo <= levelPrefabs.Length)
         {
+            Grid grid = levelContainer.GetComponent<Grid>();
+            if (grid != null)
+            {
+                // TODO: add better config for levels,
+                // with configurable grid cells size, backgrounds and possibly music.
+                grid.cellSize = new Vector3(levelNo == 6 ? 1 : 3, 1, 0);
+            }
+
             // Load a level prefab. Note that level numbers are 1-based.
             GameObject levelPrefab = levelPrefabs[levelNo - 1];
-            Instantiate(levelPrefab, levelContainer);
+            Instantiate(levelPrefab, levelContainer.transform);
         }
         else if (levelNo > levelPrefabs.Length)
         {
