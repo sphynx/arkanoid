@@ -912,7 +912,8 @@ MonoBehaviour:
   ballPrefab: {fileID: 3473124284568247994, guid: c5e57a9beefc74c328b0267b2496eafe, type: 3}
   ballImpulse: 15
   laserBeamPrefab: {fileID: 4380203898824299432, guid: 1736e7b70bd9e4606b2a4d162cbbfe9b, type: 3}
-  laserTime: 5
+  laserTime: 3
+  laseFireRate: 0.4
   bonusLogic: {fileID: 823077567}
   widePadTime: 5
 --- !u!212 &1111540109

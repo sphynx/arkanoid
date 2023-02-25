@@ -34,6 +34,9 @@ public class Pad : MonoBehaviour
     float laserTime;
 
     [SerializeField]
+    float laseFireRate;
+
+    [SerializeField]
     BonusesLogic bonusLogic;
 
     [SerializeField]
@@ -44,11 +47,12 @@ public class Pad : MonoBehaviour
 
     float velocity;
 
-    // prvate vars related to bonuses:
+    // private vars related to bonuses:
     bool glueBall;
     bool useLaser;
     bool useWidePad;
     float laserActiveTime;
+    float laserCanFireTime;
     float widePadActiveTime;
 
     List<Ball> ballsOnPad;
@@ -62,6 +66,7 @@ public class Pad : MonoBehaviour
         useLaser = false;
         useWidePad = false;
         laserActiveTime = 0f;
+        laserCanFireTime = 0f;
         widePadActiveTime = 0f;
 
         ballsOnPad = new List<Ball>();
@@ -211,6 +216,8 @@ public class Pad : MonoBehaviour
 
     void FireLaser()
     {
+        laserCanFireTime = Time.time + laseFireRate;
+
         float height = spriteRenderer.sprite.bounds.size.y;
         float width = height * spriteRenderer.size.x;
 
@@ -232,7 +239,7 @@ public class Pad : MonoBehaviour
         {
             FireBallsInRandomDirections();
 
-            if (useLaser)
+            if (useLaser && Time.time > laserCanFireTime)
                 FireLaser();
         }
         else if (Input.GetKeyDown(KeyCode.R))
